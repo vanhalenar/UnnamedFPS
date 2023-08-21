@@ -1,0 +1,68 @@
+[gd_scene load_steps=10 format=3 uid="uid://bxnyitycnbdp8"]
+
+[ext_resource type="Script" path="res://scripts/player.cs" id="1_6gu82"]
+[ext_resource type="Texture2D" uid="uid://d0h08ot0bcejs" path="res://textures/crosshair.png" id="2_37aqi"]
+[ext_resource type="Script" path="res://scripts/crosshair.cs" id="3_4xy0a"]
+[ext_resource type="Script" path="res://scripts/cameraRayCast.cs" id="4_2k4m0"]
+[ext_resource type="PackedScene" uid="uid://brepa0kapg4rl" path="res://scenes/handgun.tscn" id="5_er2ap"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_4f25h"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_bmkwl"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_1x7ai"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_ni3n2"]
+radius = 3.0
+
+[node name="Player" type="CharacterBody3D"]
+script = ExtResource("1_6gu82")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_4f25h")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_bmkwl")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+
+[node name="CenterContainer" type="CenterContainer" parent="Camera3D"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Crosshair" type="TextureRect" parent="Camera3D/CenterContainer"]
+texture_filter = 1
+layout_mode = 2
+texture = ExtResource("2_37aqi")
+expand_mode = 1
+stretch_mode = 3
+script = ExtResource("3_4xy0a")
+
+[node name="RayCast3D" type="RayCast3D" parent="Camera3D"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+target_position = Vector3(0, -6, 0)
+collide_with_areas = true
+script = ExtResource("4_2k4m0")
+
+[node name="PickupPosition" type="Marker3D" parent="Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.71966)
+
+[node name="Handgun" parent="Camera3D" instance=ExtResource("5_er2ap")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.228, -0.305, -0.536)
+
+[node name="AimCast" type="RayCast3D" parent="Camera3D"]
+target_position = Vector3(0, 0, -50)
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.5, 0, 0, 0, 1, 0, -0.5, 0)
+visible = false
+mesh = SubResource("CylinderMesh_1x7ai")
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("CylinderShape3D_ni3n2")
