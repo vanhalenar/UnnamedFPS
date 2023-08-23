@@ -55,7 +55,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.71966)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.228, -0.305, -0.536)
 
 [node name="AimCast" type="RayCast3D" parent="Camera3D"]
-target_position = Vector3(0, 0, -50)
+target_position = Vector3(0, 0, -300)
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.5, 0, 0, 0, 1, 0, -0.5, 0)

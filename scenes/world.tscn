@@ -1,9 +1,10 @@
-[gd_scene load_steps=14 format=3 uid="uid://ci3pvoqerm7v2"]
+[gd_scene load_steps=15 format=3 uid="uid://ci3pvoqerm7v2"]
 
 [ext_resource type="Script" path="res://scripts/world.cs" id="1_e1104"]
 [ext_resource type="PackedScene" uid="uid://bxnyitycnbdp8" path="res://scenes/player.tscn" id="1_ehdyq"]
 [ext_resource type="PackedScene" uid="uid://csi33ienbajxi" path="res://scenes/box.tscn" id="3_il7cf"]
 [ext_resource type="PackedScene" uid="uid://dh7njm3o00spx" path="res://scenes/man.tscn" id="4_phpfb"]
+[ext_resource type="PackedScene" uid="uid://dfhxmnbako8b4" path="res://scenes/skybox.tscn" id="5_0s3fy"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0qlk7"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -80,3 +81,6 @@ shape = SubResource("BoxShape3D_1o2us")
 
 [node name="Man" parent="." instance=ExtResource("4_phpfb")]
 playerPath = NodePath("../Player")
+
+[node name="Skybox" parent="." instance=ExtResource("5_0s3fy")]
+metadata/_edit_lock_ = true
