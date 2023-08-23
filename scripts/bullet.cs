@@ -5,7 +5,7 @@ public partial class bullet : Node3D
 {
 	public bool shoot = false;
 
-	public const float speed = 100.0f;
+	public const float speed = 60.0f;
 	public const float damage = 10.0f;
 
 	Vector3 zeroVector = new Vector3(0, 0, -speed);
@@ -18,7 +18,7 @@ public partial class bullet : Node3D
 
 		area3D = (Area3D)GetNode("Area3D");
 		area3D.AreaEntered += (area) => _On_Area_body_Entered(area);
-		//BodyEntered += (body) => _On_Physics_body_Entered(body);
+		area3D.BodyEntered += (body) => _On_Physics_body_Entered(body);
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

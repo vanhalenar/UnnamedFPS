@@ -16,6 +16,8 @@ public partial class man : CharacterBody3D
 	private NavigationAgent3D navigationAgent { get; set; }
 	private AnimationTree animationTree { get; set; }
 	private Area3D detectionArea { get; set; }
+	private Area3D hitbox { get; set; }
+	private Skeleton3D skeleton { get; set; }
 	enum state
 	{
 		chase,
@@ -28,13 +30,19 @@ public partial class man : CharacterBody3D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		
 		player = (CharacterBody3D)GetNode(playerPath);
 		navigationAgent = (NavigationAgent3D)GetNode("NavigationAgent3D");
 		animationTree = (AnimationTree)GetNode("AnimationTree");
 		detectionArea = (Area3D)GetNode("Area3D");
+		hitbox = (Area3D)GetNode("Hitbox");
+		skeleton = (Skeleton3D)GetNode("Armature/Skeleton3D");
+
+		animationTree.Active = true;
 
 		detectionArea.AreaEntered += (area) => goToIdle();
 		detectionArea.AreaExited += (area) => goToChase();
+		hitbox.AreaEntered += (area) => hit();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -89,5 +97,8 @@ public partial class man : CharacterBody3D
 		currentState = state.chase;
 	}
 
-	
+	private void hit()
+	{
+		skeleton.PhysicalBonesStartSimulation();
+	}
 }
