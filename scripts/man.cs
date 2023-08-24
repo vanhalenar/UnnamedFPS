@@ -44,7 +44,7 @@ public partial class man : CharacterBody3D
 		detectionArea.AreaExited += (area) => goToChase();
 		hitbox.AreaEntered += (area) => hit();
 
-		skeleton.PhysicalBonesStartSimulation();
+		//skeleton.PhysicalBonesStartSimulation();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
