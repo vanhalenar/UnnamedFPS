@@ -98,6 +98,11 @@ lclick={
 ]
 }
 
+[physics]
+
+common/physics_ticks_per_second=120
+3d/physics_engine="JoltPhysics3D"
+
 [rendering]
 
 renderer/rendering_method.mobile="gl_compatibility"

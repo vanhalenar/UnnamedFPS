@@ -21,7 +21,8 @@ public partial class man : CharacterBody3D
 	enum state
 	{
 		chase,
-		idle
+		idle,
+		dead
 	}
 
 	state currentState = state.chase;
@@ -44,11 +45,19 @@ public partial class man : CharacterBody3D
 		detectionArea.AreaExited += (area) => goToChase();
 		hitbox.AreaEntered += (area) => hit();
 
+		
 		//skeleton.PhysicalBonesStartSimulation();
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
+    public override void _UnhandledInput(InputEvent @event)
+    {
+        if (Input.IsActionJustPressed("lclick")){
+			hit();
+		}
+    }
+
+    // Called every frame. 'delta' is the elapsed time since the previous frame.
+    public override void _Process(double delta)
 	{
 		Vector3 lookPosition = new Vector3(player.GlobalPosition.X, GlobalPosition.Y, player.GlobalPosition.Z);
 		switch(currentState)
@@ -90,17 +99,20 @@ public partial class man : CharacterBody3D
 	private void goToIdle()
 	{
 		inRange = true;
-		currentState = state.idle;
+		if (currentState != state.dead)
+			currentState = state.idle;
 	}
 
 	private void goToChase()
 	{
 		inRange = false;
-		currentState = state.chase;
+		if (currentState != state.dead)
+			currentState = state.chase;
 	}
 
 	private void hit()
 	{
+		currentState = state.dead;
 		skeleton.PhysicalBonesStartSimulation();
 	}
 }
