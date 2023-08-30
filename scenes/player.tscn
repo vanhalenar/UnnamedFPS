@@ -19,13 +19,14 @@ radius = 3.0
 script = ExtResource("1_6gu82")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+visible = false
 mesh = SubResource("CapsuleMesh_4f25h")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_bmkwl")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.857911, -0.242564)
 
 [node name="CenterContainer" type="CenterContainer" parent="Camera3D"]
 anchors_preset = 15
@@ -45,6 +46,7 @@ script = ExtResource("3_4xy0a")
 [node name="RayCast3D" type="RayCast3D" parent="Camera3D"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
 target_position = Vector3(0, -6, 0)
+collision_mask = 2
 collide_with_areas = true
 script = ExtResource("4_2k4m0")
 
@@ -56,6 +58,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.228, -0.305, -0.536)
 
 [node name="AimCast" type="RayCast3D" parent="Camera3D"]
 target_position = Vector3(0, 0, -300)
+collision_mask = 2
 debug_shape_custom_color = Color(0, 1, 0, 1)
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="."]

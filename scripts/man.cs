@@ -22,7 +22,9 @@ public partial class man : CharacterBody3D
 	{
 		chase,
 		idle,
-		dead
+		dead,
+		attack,
+		patrol
 	}
 
 	state currentState = state.chase;
@@ -49,17 +51,11 @@ public partial class man : CharacterBody3D
 		//skeleton.PhysicalBonesStartSimulation();
 	}
 
-    public override void _UnhandledInput(InputEvent @event)
-    {
-        if (Input.IsActionJustPressed("lclick")){
-			hit();
-		}
-    }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
 	{
-		Vector3 lookPosition = new Vector3(player.GlobalPosition.X, GlobalPosition.Y, player.GlobalPosition.Z);
+		
 		switch(currentState)
 		{
 			case state.chase:
@@ -69,7 +65,7 @@ public partial class man : CharacterBody3D
 				navigationAgent.TargetPosition = player.GlobalPosition;
         		Vector3 nextPoint = navigationAgent.GetNextPathPosition();
 				Velocity = (nextPoint - GlobalPosition).Normalized() * speed;
-
+				Vector3 lookPosition = new Vector3(GlobalPosition.X + Velocity.X, GlobalPosition.Y, GlobalPosition.Z + Velocity.Z);
 				
                 LookAt(lookPosition, Vector3.Up);
 
@@ -80,7 +76,7 @@ public partial class man : CharacterBody3D
 				velocity.Z = (float)Mathf.Lerp(velocity.Z, 0, delta * lerpVal);
 				Velocity = velocity;
 				
-                LookAt(lookPosition, Vector3.Up);
+                //LookAt(lookPosition, Vector3.Up);
 				//animationTree.Set("parameters/conditions/idle", 1);
 				//animationTree.Set("parameters/conditions/run", 0);
 				//GD.Print("asds");

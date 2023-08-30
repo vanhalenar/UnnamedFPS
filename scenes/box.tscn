@@ -22,7 +22,8 @@ _surfaces = [{
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_q2vhn"]
 
-[node name="Box" type="RigidBody3D"]
+[node name="Box" type="RigidBody3D" groups=["Pickable"]]
+collision_layer = 2
 script = ExtResource("1_lk3gk")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]

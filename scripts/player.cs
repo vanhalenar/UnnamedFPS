@@ -22,7 +22,7 @@ public partial class player : CharacterBody3D
 	public const float changeFOV = 1.5f;
 
 	// Object picking variables.
-	public RigidBody3D pickedObject;
+	public PhysicalBone3D	 pickedObject;
 	public int pullPower = 4;
 	
 	public MeshInstance3D outline;
@@ -53,6 +53,7 @@ public partial class player : CharacterBody3D
 		bulletScene = GD.Load<PackedScene>("res://scenes/bullet.tscn");
 
 		DisplayServer.MouseSetMode(DisplayServer.MouseMode.Captured);
+
 	}
 	
 	public override void _UnhandledInput(InputEvent @event)
@@ -75,17 +76,17 @@ public partial class player : CharacterBody3D
 		}
 
 		// Picking objects.
-		/*
-		if (Input.IsActionJustPressed("lclick"))
+		
+		if (Input.IsActionJustPressed("rclick"))
 		{
 			pickObject();
 		}
 		
-		if (Input.IsActionJustReleased("lclick"))
+		if (Input.IsActionJustReleased("rclick"))
 		{
 			dropObject();
 		}
-		*/
+		
 
 	}
 
@@ -157,6 +158,7 @@ public partial class player : CharacterBody3D
 		// Outline toggling.
 		if (raycast.IsColliding() && raycast.GetCollider() is RigidBody3D)
 		{
+			//GD.Print(raycast.GetCollider());
 			RigidBody3D collider = (RigidBody3D)raycast.GetCollider();
 			outline = (MeshInstance3D)collider.GetChild(0).GetChild(0);
 			
@@ -182,6 +184,7 @@ public partial class player : CharacterBody3D
 			var a = pickedObject.GlobalTransform.Origin;
 			var b = pickupPosition.GlobalTransform.Origin;
 			pickedObject.LinearVelocity = (b-a)*pullPower;
+			
 		}
 
 		// Shooting.
@@ -197,6 +200,9 @@ public partial class player : CharacterBody3D
 				transform.Basis = gunRaycast.GlobalTransform.Basis;
 				bulletInstance.Transform = transform;*/
 				
+
+				GD.Print(aimcast.GetCollisionPoint());
+				//bulletInstance.GlobalPosition = aimcast.GetCollisionPoint();
 				bulletInstance.LookAt(aimcast.GetCollisionPoint(), Vector3.Up);
 				bulletInstance.shoot = true;
 				
@@ -209,9 +215,11 @@ public partial class player : CharacterBody3D
 	public void pickObject()
 	{
 		var collider = raycast.GetCollider();
-		if (collider != null && collider is RigidBody3D)
+		GD.Print(collider);
+		if (collider != null && (collider is PhysicalBone3D /*|| collider is CharacterBody3D*/))
 		{
-			pickedObject = (RigidBody3D)collider;
+			
+			pickedObject = (PhysicalBone3D)collider;
 		} 
 	}
 

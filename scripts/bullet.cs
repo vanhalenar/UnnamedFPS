@@ -5,7 +5,7 @@ public partial class bullet : Node3D
 {
 	public bool shoot = false;
 
-	public const float speed = 6.0f;
+	public const float speed = 60.0f;
 	public const float damage = 10.0f;
 
 	Vector3 zeroVector = new Vector3(0, 0, -speed);
