@@ -10,6 +10,7 @@ public partial class player : CharacterBody3D
 	public const float jumpVelocity = 6.0f;
 	public const float sensitivity = 0.003f;
 	public const float gravityMultiplier = 1.2f;
+	public int health = 200;
 	
 	// Head bob variables.
 	public const float headBobFreq = 2.0f;

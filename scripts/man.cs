@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.ComponentModel;
+using System.Runtime.ExceptionServices;
 
 
 public partial class man : CharacterBody3D
@@ -15,6 +16,8 @@ public partial class man : CharacterBody3D
 	public Vector3 locationA;
 	public Vector3 locationB;
 	public Vector3 nextLocation;
+	public int health = 100;
+	public const float turn_speed = 4.0f;
 
 	public bool inRange = false;
 	private NavigationAgent3D navigationAgent { get; set; }
@@ -27,6 +30,11 @@ public partial class man : CharacterBody3D
 	private Marker3D pointA { get; set; }
 	private Marker3D pointB { get; set; }
 	private Timer patrolBreakTimer { get; set; }
+	private Timer shootingTimer { get; set; }
+	private Node3D eyes { get; set; }
+	private Node3D muzzle { get; set; }
+
+	PackedScene bulletScene;
 	enum state
 	{
 		chase,
@@ -54,7 +62,12 @@ public partial class man : CharacterBody3D
 		pointA = (Marker3D)GetNode("PointA");
 		pointB = (Marker3D)GetNode("PointB");
 		patrolBreakTimer = (Timer)GetNode("PatrolBreakTimer");
+		shootingTimer = (Timer)GetNode("ShootingTimer");
 		animationPlayer = (AnimationPlayer)GetNode("AnimationPlayer");
+		eyes = (Node3D)GetNode("Eyes");
+		muzzle = (Node3D)GetNode("Muzzle");
+
+		bulletScene = GD.Load<PackedScene>("res://scenes/bullet.tscn");
 
 		locationA = pointA.GlobalPosition;
 		locationB = pointB.GlobalPosition;
@@ -69,6 +82,8 @@ public partial class man : CharacterBody3D
 		
 		patrolBreakTimer.Timeout += () => patrolBreakTimeout();
 		hitbox.AreaEntered += (area) => hit();
+
+		shootingTimer.Timeout += () => shootingTimerTimeout();
 
 	}
 
@@ -129,9 +144,11 @@ public partial class man : CharacterBody3D
 				velocity.Z = (float)Mathf.Lerp(velocity.Z, 0, delta * lerpVal);
 				Velocity = velocity;
 
-				lookPosition = new Vector3(player.GlobalPosition.X, GlobalPosition.Y, player.GlobalPosition.Z);
+				eyes.LookAt(player.GlobalPosition, Vector3.Up);
+				RotateY(Mathf.DegToRad(eyes.Rotation.Y * turn_speed));
+				//lookPosition = new Vector3(player.GlobalPosition.X, GlobalPosition.Y, player.GlobalPosition.Z);
 				
-                LookAt(lookPosition, Vector3.Up);
+                //LookAt(lookPosition, Vector3.Up);
 
 				break;
 
@@ -149,11 +166,13 @@ public partial class man : CharacterBody3D
 	{
 		if (shootingRange.HasOverlappingAreas())
 		{
+			shootingTimer.Start();
 			currentState = state.attack;
 			animationPlayer.Play("attack", 0.2);
 		}
 		else
 		{
+			shootingTimer.Stop();
 			currentState = state.chase;
 			animationPlayer.Play("run", 0.2);
 		}
@@ -164,6 +183,7 @@ public partial class man : CharacterBody3D
 	{
 		if (currentState == state.chase)
 		{
+			shootingTimer.Start();
 			currentState = state.attack;
 			animationPlayer.Play("attack", 0.2);
 		}
@@ -182,8 +202,15 @@ public partial class man : CharacterBody3D
 
 	private void hit()
 	{
-		currentState = state.dead;
-		skeleton.PhysicalBonesStartSimulation();
+		health -= 30;
+		if (health <= 0)
+		{
+			animationPlayer.Stop();
+			shootingTimer.Stop();
+			currentState = state.dead;
+			skeleton.PhysicalBonesStartSimulation();
+		}
+		
 	}
 
 	private void switchDestination()
@@ -202,5 +229,19 @@ public partial class man : CharacterBody3D
 	{
 		animationPlayer.Play("walk", 0.2);
 		currentState = state.patrol;
+	}
+
+	private void shootingTimerTimeout()
+	{
+		GD.Print("timeout");
+		animationPlayer.Play("attack");
+		fireShot();
+	}
+
+	private void fireShot()
+	{
+		var bulletInstance = (bullet)bulletScene.Instantiate();
+		muzzle.AddChild(bulletInstance);
+		bulletInstance.shoot = true;
 	}
 }
